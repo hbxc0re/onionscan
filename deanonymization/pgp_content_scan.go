@@ -28,10 +28,14 @@ func PGPContentScan(osreport *report.OnionScanReport, anonreport *report.Anonymi
 				var identity string
 				for identity = range keys[0].Identities {
 					anonreport.EmailAddresses = append(anonreport.EmailAddresses, identity)
+					osc.Database.InsertRelationship(osreport.HiddenService, "pgp", "email-address", identity)
 					break
 				}
 
 				osreport.AddPGPKey(keyString, identity, keys[0].Subkeys[0].PublicKey.KeyIdShortString())
+				
+				
+			        osc.Database.InsertRelationship(osreport.HiddenService, "pgp", "identity", keys[0].Subkeys[0].PublicKey.KeyIdShortString())
 			}
 		}
 	}
